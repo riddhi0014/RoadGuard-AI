@@ -2,6 +2,8 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import { connectDB } from "./config/db";
+import authRoutes from "./routes/authRoutes";
+import testRoutes from "./routes/testRoutes";
 
 dotenv.config();
 
@@ -14,8 +16,10 @@ app.use(express.json());
 // before wiring up any real endpoints.
 app.get("/api/health", (_req, res) => {
   res.json({ status: "ok", message: "RoadGuard AI backend is running" });
-  console.log("Health check endpoint hit");
 });
+
+app.use("/api/auth", authRoutes);
+app.use("/api/test", testRoutes);
 
 const PORT = process.env.PORT || 6000;
 
