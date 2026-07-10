@@ -1,11 +1,15 @@
+
+import dotenv from "dotenv";
+dotenv.config();
+
 import express from "express";
 import cors from "cors";
-import dotenv from "dotenv";
 import { connectDB } from "./config/db";
 import authRoutes from "./routes/authRoutes";
 import testRoutes from "./routes/testRoutes";
+import complaintRoutes from "./routes/complaintRoutes";
+import userRoutes from "./routes/userRoutes";
 
-dotenv.config();
 
 const app = express();
 
@@ -20,8 +24,10 @@ app.get("/api/health", (_req, res) => {
 
 app.use("/api/auth", authRoutes);
 app.use("/api/test", testRoutes);
+app.use("/api/complaints", complaintRoutes);
+app.use("/api/users", userRoutes);
 
-const PORT = process.env.PORT || 6000;
+const PORT = process.env.PORT || 3000;
 
 const start = async () => {
   await connectDB();

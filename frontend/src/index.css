@@ -1,0 +1,82 @@
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Neutral scale - cool "concrete" gray, not warm cream. */
+  --neutral-0: 0 0% 100%;
+  --neutral-50: 210 17% 98%;
+  --neutral-100: 210 15% 95%;
+  --neutral-200: 210 13% 91%;
+  --neutral-300: 210 11% 82%;
+  --neutral-400: 210 9% 65%;
+  --neutral-500: 210 8% 48%;
+  --neutral-600: 210 10% 36%;
+  --neutral-700: 210 12% 26%;
+  --neutral-800: 210 14% 17%;
+  --neutral-900: 210 16% 10%;
+
+  --paper: var(--neutral-50);
+  --surface: var(--neutral-0);
+  --ink: var(--neutral-900);
+  --ink-muted: var(--neutral-600);
+  --border: var(--neutral-200);
+
+  /* Brand - deep navy (sidebar, primary buttons) + one accent blue
+     (links, active states, complaint IDs). Approved from the Figma
+     reference - do not introduce additional hues into the chrome. */
+  --navy: 221 39% 21%;          /* #1E2A47 */
+  --navy-elevated: 220 33% 29%; /* #34456B - badges/active items on navy */
+  --accent: 217 91% 53%;        /* #2563EB */
+  --accent-foreground: 0 0% 100%;
+
+  /* Severity - traffic-signal semantics, exactly 3 tiers + critical. */
+  --severity-critical: 0 74% 51%;   /* #DC2626 */
+  --severity-critical-bg: 0 74% 95%;
+  --severity-high: 21 89% 49%;      /* #EA580C */
+  --severity-high-bg: 21 89% 94%;
+  --severity-medium: 32 95% 44%;    /* #D97706 */
+  --severity-medium-bg: 45 93% 89%;
+  --severity-low: 175 84% 32%;      /* #0D9488 */
+  --severity-low-bg: 176 57% 88%;
+
+  /* Status - every state gets a tinted pill per the approved reference. */
+  --status-pending-bg: 220 14% 93%;
+  --status-pending-text: 220 9% 46%;
+  --status-assigned-bg: 250 90% 94%;
+  --status-assigned-text: 254 62% 61%;
+  --status-progress-bg: 45 93% 89%;
+  --status-progress-text: 32 81% 39%;
+  --status-approved-bg: 213 84% 93%;
+  --status-approved-text: 217 91% 53%;
+  --status-verified-bg: 262 68% 92%;
+  --status-verified-text: 258 74% 62%;
+  --status-completed-bg: 142 71% 90%;
+  --status-completed-text: 142 71% 39%;
+  --status-rejected-bg: 0 74% 95%;
+  --status-rejected-text: 0 65% 45%;
+}
+
+* {
+  border-color: hsl(var(--border));
+}
+
+body {
+  @apply bg-paper text-ink font-mono antialiased;
+}
+
+/* Visible keyboard focus - accessibility floor, never remove */
+:focus-visible {
+  outline: 2px solid hsl(var(--accent));
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
