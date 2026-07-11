@@ -23,8 +23,8 @@ import os
 from pathlib import Path
 
 import faiss
+import fitz  # PyMuPDF
 import numpy as np
-from pypdf import PdfReader
 from sentence_transformers import SentenceTransformer
 
 # ---------------------------------------------------------------------------
@@ -71,12 +71,23 @@ META_PATH = INDEX_DIR / "irc_guidelines_meta.json"
 
 
 def extract_text_from_pdf(pdf_path: Path) -> str:
-    """Pulls all text out of a PDF, page by page, joined with newlines."""
-    reader = PdfReader(str(pdf_path))
+    """
+    Pulls all text out of a PDF, page by page, joined with newlines.
+
+    Uses PyMuPDF (fitz) rather than pypdf. PyMuPDF reconstructs word
+    boundaries from each character's actual (x, y) position on the page,
+    which handles older/scanned-then-digitized government PDFs (like the
+    IRC documents here) far more reliably than pypdf's stream-order
+    extraction — those often lack explicit space characters between words,
+    which caused pypdf to glue whole sentences into single "words" and
+    silently produce far too few chunks.
+    """
+    doc = fitz.open(str(pdf_path))
     pages_text = []
-    for page in reader.pages:
-        text = page.extract_text() or ""
+    for page in doc:
+        text = page.get_text("text") or ""
         pages_text.append(text)
+    doc.close()
     return "\n".join(pages_text)
 
 

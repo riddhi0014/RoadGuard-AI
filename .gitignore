@@ -7,3 +7,9 @@ venv/
 .venv/
 __pycache__/
 *.pyc
+ai_service/data/guidelines/*.pdf
+**/.env
+.DS_Store
+*.egg-info/
+.pytest_cache/
+build/
