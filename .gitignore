@@ -13,3 +13,9 @@ ai_service/data/guidelines/*.pdf
 *.egg-info/
 .pytest_cache/
 build/
+ai_service/yolo_training/raw_data/
+ai_service/yolo_training/dataset/
+runs/
+*.pt
+
+
