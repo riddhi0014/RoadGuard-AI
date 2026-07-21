@@ -10,6 +10,10 @@ The --reload flag auto-restarts the server on code changes, useful while
 developing. Drop it for anything resembling production use later.
 """
 
+import os
+os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
+import faulthandler
+faulthandler.enable()
 import logging
 
 from fastapi import FastAPI
@@ -17,6 +21,9 @@ from contextlib import asynccontextmanager
 
 from app.routers import analysis
 from app.services import rag_service
+
+from app.services import yolo_service
+from app.routers import detect
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -29,6 +36,7 @@ async def lifespan(app: FastAPI):
     # of slow (~10s+ reloading the embedding model every single time).
     logger.info("Starting up RoadGuard AI service...")
     rag_service.load_resources()
+    yolo_service.load_resources()
     yield
     # Shutdown: nothing to clean up yet, but this is where it'd go.
     logger.info("Shutting down RoadGuard AI service...")
@@ -42,7 +50,7 @@ app = FastAPI(
 )
 
 app.include_router(analysis.router)
-
+app.include_router(detect.router)
 
 @app.get("/health")
 def health_check():

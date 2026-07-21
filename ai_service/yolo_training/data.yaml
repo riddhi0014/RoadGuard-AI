@@ -1,0 +1,6 @@
+path: /Users/riddhijain/Developer/RoadGuard-AI/ai_service/yolo_training/dataset
+train: train/images
+val: val/images
+
+nc: 3
+names: ["pothole", "crack", "open_manhole"]

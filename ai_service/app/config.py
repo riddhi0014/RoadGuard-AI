@@ -36,6 +36,7 @@ class Settings(BaseSettings):
     base_dir: Path = Path(__file__).parent.parent
     faiss_index_path: Path = base_dir / "data" / "index" / "irc_guidelines.faiss"
     faiss_meta_path: Path = base_dir / "data" / "index" / "irc_guidelines_meta.json"
-
+    # Add to your existing Settings class in app/config.py:
+    yolo_model_path: Path = Path(__file__).parent.parent / "yolo_model" / "best.pt"
 
 settings = Settings()

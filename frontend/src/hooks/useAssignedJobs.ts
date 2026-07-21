@@ -5,7 +5,7 @@ export interface AssignedJob {
   _id: string;
   address?: string;
   description?: string;
-  images: string[];
+          images: string[];
   status: string;
   detections: { severity: string }[];
   createdAt: string;

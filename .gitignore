@@ -17,5 +17,6 @@ ai_service/yolo_training/raw_data/
 ai_service/yolo_training/dataset/
 runs/
 *.pt
-
+!ai_service/yolo_model/best.pt
+ai_service/crash_log.txt
 
