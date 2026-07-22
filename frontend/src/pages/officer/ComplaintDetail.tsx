@@ -11,7 +11,14 @@ interface FullComplaint {
   images: string[];
   description?: string;
   address?: string;
-  detections: { defectType: string; confidence: number; severity: string }[];
+  detections: {
+    defectType: string;
+    confidence: number;
+    severity: string;
+    estimatedAreaSqM?: number;
+  }[];
+  inspectionReport?: string;
+  recommendedRepair?: string;
   priorityScore?: number;
   status: string;
   assignedContractor?: { name: string; companyName?: string } | null;
@@ -208,19 +215,27 @@ export function ComplaintDetail() {
             </div>
             {complaint.detections.length === 0 ? (
               <div className="text-[11.5px] text-ink-muted">
-                No detections yet — the AI detection pipeline hasn't been
-                integrated.
+                No defects detected by the AI analysis, or analysis is still in
+                progress (this can take a few minutes after submission). Assess
+                manually from the photos above if needed.
               </div>
             ) : (
               complaint.detections.map((d, i) => (
                 <div
                   key={i}
-                  className="flex justify-between border-b border-neutral-100 py-1.5 text-xs"
+                  className="border-b border-neutral-100 py-1.5 text-xs last:border-0"
                 >
-                  <span className="capitalize text-ink">{d.defectType}</span>
-                  <span className="text-ink-muted">
-                    {Math.round(d.confidence * 100)}% confidence
-                  </span>
+                  <div className="flex justify-between">
+                    <span className="capitalize text-ink">{d.defectType}</span>
+                    <span className="text-ink-muted">
+                      {Math.round(d.confidence * 100)}% confidence
+                    </span>
+                  </div>
+                  {d.estimatedAreaSqM != null && (
+                    <div className="mt-0.5 text-[11px] text-ink-muted">
+                      Est. area: {d.estimatedAreaSqM} m²
+                    </div>
+                  )}
                 </div>
               ))
             )}
@@ -228,11 +243,26 @@ export function ComplaintDetail() {
 
           <div className="rounded-lg border border-border bg-paper p-4">
             <div className="mb-3 text-[11px] font-bold tracking-wide text-ink-muted">
-              AI VERIFICATION
+              AI INSPECTION REPORT
             </div>
-            <div className="text-[11.5px] text-ink-muted">
-              Not yet available — the AI verification service hasn't been built.
-            </div>
+            {complaint.inspectionReport ? (
+              <>
+                <div className="mb-3 text-xs leading-relaxed text-ink">
+                  {complaint.inspectionReport}
+                </div>
+                <div className="mb-1 text-[11px] font-bold tracking-wide text-ink-muted">
+                  RECOMMENDED REPAIR
+                </div>
+                <div className="text-xs leading-relaxed text-ink">
+                  {complaint.recommendedRepair}
+                </div>
+              </>
+            ) : (
+              <div className="text-[11.5px] text-ink-muted">
+                Not yet available — AI analysis may still be in progress (this
+                can take a few minutes), or no defects were detected.
+              </div>
+            )}
           </div>
         </div>
       </div>

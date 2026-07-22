@@ -5,12 +5,26 @@ import { useGeolocation } from "@/hooks/useGeolocation";
 import type { AssignedJob } from "@/hooks/useAssignedJobs";
 import { ImageLightbox } from "@/components/shared/ImageLightbox";
 
+// Extends AssignedJob locally with the AI fields until useAssignedJobs.ts's
+// own type is updated to include them — safe to remove this extension
+// once that's done, as long as the field names match.
+type JobWithAiReport = AssignedJob & {
+  detections?: {
+    defectType: string;
+    confidence: number;
+    severity: string;
+    estimatedAreaSqM?: number;
+  }[];
+  inspectionReport?: string;
+  recommendedRepair?: string;
+};
+
 export function JobDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { status: geoStatus, latitude, longitude, retry } = useGeolocation();
 
-  const [job, setJob] = useState<AssignedJob | null>(null);
+  const [job, setJob] = useState<JobWithAiReport | null>(null);
   const [loading, setLoading] = useState(true);
   const [files, setFiles] = useState<File[]>([]);
   const [submitting, setSubmitting] = useState(false);
@@ -127,6 +141,48 @@ export function JobDetail() {
             </div>
             <div className="mb-4 rounded-lg border border-border bg-white p-2.5 text-xs">
               {job.description}
+            </div>
+          </>
+        )}
+
+        {job.detections && job.detections.length > 0 && (
+          <>
+            <div className="mb-1.5 text-[11.5px] font-bold tracking-wide text-ink-muted">
+              DETECTED DEFECT
+            </div>
+            <div className="mb-4 rounded-lg border border-border bg-white p-2.5 text-xs">
+              {job.detections.map((d, i) => (
+                <div key={i} className="mb-1 flex justify-between last:mb-0">
+                  <span className="capitalize">{d.defectType}</span>
+                  <span className="text-ink-muted">
+                    {Math.round(d.confidence * 100)}% confidence
+                    {d.estimatedAreaSqM != null &&
+                      ` · ${d.estimatedAreaSqM} m²`}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </>
+        )}
+
+        {job.inspectionReport && (
+          <>
+            <div className="mb-1.5 text-[11.5px] font-bold tracking-wide text-ink-muted">
+              AI INSPECTION REPORT
+            </div>
+            <div className="mb-4 rounded-lg border border-border bg-white p-2.5 text-xs leading-relaxed">
+              {job.inspectionReport}
+            </div>
+          </>
+        )}
+
+        {job.recommendedRepair && (
+          <>
+            <div className="mb-1.5 text-[11.5px] font-bold tracking-wide text-ink-muted">
+              RECOMMENDED REPAIR
+            </div>
+            <div className="mb-4 rounded-lg border border-border bg-white p-2.5 text-xs leading-relaxed">
+              {job.recommendedRepair}
             </div>
           </>
         )}

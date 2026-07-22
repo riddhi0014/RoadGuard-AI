@@ -3,6 +3,7 @@ import Complaint from "../models/Complaint";
 import { uploadBufferToCloudinary } from "../utils/cloudinaryUpload";
 import User from "../models/User";
 import { Types } from "mongoose";
+import { analyzeComplaintPhoto } from "../services/aiService";
 
 // POST /api/complaints
 // Expects multipart/form-data:
@@ -38,6 +39,8 @@ export const createComplaint = async (req: Request, res: Response) => {
         coordinates: [parseFloat(longitude), parseFloat(latitude)],
       },
     });
+
+    analyzeComplaintPhoto((complaint._id as Types.ObjectId).toString(), imageUrls[0]);
 
     res.status(201).json(complaint);
   } catch (error) {

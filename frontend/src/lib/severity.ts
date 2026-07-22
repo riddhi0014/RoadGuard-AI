@@ -8,10 +8,14 @@ const SEVERITY_RANK: Record<Severity, number> = {
 };
 
 export const getWorstSeverity = (
-  detections: { severity: Severity }[]
+  detections: { severity?: Severity }[]
 ): Severity => {
-  if (!detections || detections.length === 0) return "low";
-  return detections.reduce((worst, d) => {
-    return SEVERITY_RANK[d.severity] > SEVERITY_RANK[worst] ? d.severity : worst;
-  }, detections[0].severity);
+  const valid = (detections || []).filter(
+    (d): d is { severity: Severity } => !!d.severity && d.severity in SEVERITY_RANK
+  );
+  if (valid.length === 0) return "low";
+  return valid.reduce((worst, d) =>
+    SEVERITY_RANK[d.severity] > SEVERITY_RANK[worst] ? d.severity : worst,
+    valid[0].severity
+  );
 };
